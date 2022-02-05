@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/smart-contract-frontend-test/static/css/main.073c9b0a.css",
+    "main.js": "/smart-contract-frontend-test/static/js/main.4da93dd7.js",
+    "static/js/787.bf8c7707.chunk.js": "/smart-contract-frontend-test/static/js/787.bf8c7707.chunk.js",
+    "index.html": "/smart-contract-frontend-test/index.html",
+    "main.073c9b0a.css.map": "/smart-contract-frontend-test/static/css/main.073c9b0a.css.map",
+    "main.4da93dd7.js.map": "/smart-contract-frontend-test/static/js/main.4da93dd7.js.map",
+    "787.bf8c7707.chunk.js.map": "/smart-contract-frontend-test/static/js/787.bf8c7707.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.073c9b0a.css",
+    "static/js/main.4da93dd7.js"
+  ]
+}
