@@ -101,6 +101,8 @@ const SimpleStore = () => {
             <button onClick={getCurrentValue}>Get Current Value</button>
             <h3>Current contract value: {currentContractVal}</h3>
             {errorMessage}
+
+            Check out the source-code <a href="https://github.com/williamokano/smart-contract-frontend-test/">https://github.com/williamokano/smart-contract-frontend-test/</a>
         </div>
     )
 }
