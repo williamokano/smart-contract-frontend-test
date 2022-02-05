@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 const SimpleStore = () => {
 
@@ -30,6 +30,10 @@ const SimpleStore = () => {
             setErrorMessage('Need to install MetaMask')
         }
     }
+
+    useEffect(() => {
+        console.log('Montou')
+    }, [])
 
     const accountChangedHandler = account => {
         setDefaultAccount(account)
