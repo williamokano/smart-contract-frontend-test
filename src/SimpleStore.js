@@ -1,14 +1,18 @@
 import { ethers } from 'ethers'
 import React, { useEffect, useState } from 'react'
 
-const SimpleStore = () => {
+const contractAddress = '0x2e91E37a9baAE9b2664cCB2F9D1Dde424E408A46'
+const SimpleStore_abi = [
+    'event NameUpdated(string name)',
+    'function setName(string memory _name) public',
+    'function getName() external view returns (string memory)',
+]
 
-    const contractAddress = '0x2e91E37a9baAE9b2664cCB2F9D1Dde424E408A46'
-    const SimpleStore_abi = [
-        'event NameUpdated(string name)',
-        'function setName(string memory _name) public',
-        'function getName() external view returns (string memory)',
-    ]
+const provider = new ethers.providers.Web3Provider(window.ethereum)
+const signer = provider.getSigner()
+const contract = new ethers.Contract(contractAddress, SimpleStore_abi, signer)
+
+const SimpleStore = () => {
 
     const [errorMessage, setErrorMessage] = useState(null)
     const [defaultAccount, setDefaultAccount] = useState(null)
@@ -16,10 +20,6 @@ const SimpleStore = () => {
     const [isConnected, setIsConnected] = useState(() => false)
 
     const [currentContractVal, setCurrentContractVal] = useState(null)
-
-    const provider = new ethers.providers.Web3Provider(window.ethereum)
-    const signer = provider.getSigner()
-    const contract = new ethers.Contract(contractAddress, SimpleStore_abi, signer)
 
     const connectWalletHandler = async () => {
         if (window.ethereum) {
@@ -43,6 +43,7 @@ const SimpleStore = () => {
 
     const accountChangedHandler = account => {
         setDefaultAccount(account)
+        setConnButtonText('Connected')
     }
 
     const getCurrentValue = async () => {
