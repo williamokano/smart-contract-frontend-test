@@ -17,9 +17,9 @@ const SimpleStore = () => {
 
     const [currentContractVal, setCurrentContractVal] = useState(null)
 
-    const [provider, setProvider] = useState(null)
-    const [signer, setSigner] = useState(null)
-    const [contract, setContract] = useState(null)
+    const provider = new ethers.providers.Web3Provider(window.ethereum)
+    const signer = provider.getSigner()
+    const contract = new ethers.Contract(contractAddress, SimpleStore_abi, signer)
 
     const connectWalletHandler = async () => {
         if (window.ethereum) {
@@ -30,18 +30,8 @@ const SimpleStore = () => {
         }
     }
 
-    useEffect(async () => {
-        const tempProvider = new ethers.providers.Web3Provider(window.ethereum)
-        await setProvider(tempProvider)
-
-        const connectedAccounts = await tempProvider.listAccounts()
-        handleConnectedAccounts(connectedAccounts)
-
-        const tempSigner = tempProvider.getSigner()
-        await setSigner(tempSigner)
-
-        const tempContract = new ethers.Contract(contractAddress, SimpleStore_abi, tempSigner)
-        await setContract(tempContract)
+    useEffect(() => {
+        provider.listAccounts().then(connectedAccounts => handleConnectedAccounts(connectedAccounts))
     }, [])
 
     const handleConnectedAccounts = async (accounts) => {
