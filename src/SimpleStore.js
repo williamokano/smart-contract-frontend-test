@@ -1,5 +1,5 @@
 import { ethers } from 'ethers'
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 
 const SimpleStore = () => {
 
@@ -13,6 +13,7 @@ const SimpleStore = () => {
     const [errorMessage, setErrorMessage] = useState(null)
     const [defaultAccount, setDefaultAccount] = useState(null)
     const [connButtonText, setConnButtonText] = useState('Connect Wallet')
+    const [isConnected, setIsConnected] = useState(() => false)
 
     const [currentContractVal, setCurrentContractVal] = useState(null)
 
@@ -22,32 +23,36 @@ const SimpleStore = () => {
 
     const connectWalletHandler = async () => {
         if (window.ethereum) {
-             const accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
-             accountChangedHandler(accounts[0])
-             setConnButtonText('Wallet connected')
-             updateEthers()
+            const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+            handleConnectedAccounts(accounts)
         } else {
             setErrorMessage('Need to install MetaMask')
         }
     }
 
-    useEffect(() => {
-        console.log('Montou')
+    useEffect(async () => {
+        const tempProvider = new ethers.providers.Web3Provider(window.ethereum)
+        await setProvider(tempProvider)
+
+        const connectedAccounts = await tempProvider.listAccounts()
+        handleConnectedAccounts(connectedAccounts)
+
+        const tempSigner = tempProvider.getSigner()
+        await setSigner(tempSigner)
+
+        const tempContract = new ethers.Contract(contractAddress, SimpleStore_abi, tempSigner)
+        await setContract(tempContract)
     }, [])
+
+    const handleConnectedAccounts = async (accounts) => {
+        if (accounts.length > 0) {
+            accountChangedHandler(accounts[0])
+            setIsConnected(true)
+        }
+    }
 
     const accountChangedHandler = account => {
         setDefaultAccount(account)
-    }
-
-    const updateEthers = () => {
-        let tempProvider = new ethers.providers.Web3Provider(window.ethereum)
-        setProvider(tempProvider)
-
-        let tempSigner = tempProvider.getSigner()
-        setSigner(tempSigner)
-
-        let tempContract = new ethers.Contract(contractAddress, SimpleStore_abi, tempSigner)
-        setContract(tempContract)
     }
 
     const getCurrentValue = async () => {
@@ -68,11 +73,13 @@ const SimpleStore = () => {
     return (
         <div>
             <h3>{"Get/Set Interaction with contract!"}</h3>
-            <button onClick={connectWalletHandler}>{connButtonText}</button>
+            {!isConnected &&
+                <button onClick={connectWalletHandler}>{connButtonText}</button>
+            }
             <h3>Address: {defaultAccount}</h3>
 
             <form onSubmit={setHandler}>
-                <input id='setText' type='text'/>
+                <input id='setText' type='text' />
                 <button type='submit'>Update Contract</button>
             </form>
 
